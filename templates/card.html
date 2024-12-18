@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog</title>
+    <style>
+        /* Basic Reset */
+        body, h1, h2, h3, h4, h5, h6, p, form {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Center-align and style body */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Container for content */
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        /* Form controls */
+        .form-control {
+            width: calc(100% - 24px);
+            padding: 10px;
+            margin-bottom: 16px;
+            border: 1px solid #dcdcdc;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        /* Button styling */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 6px;
+            background-color: #007bff;
+            color: #ffffff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+            transform: scale(1.02);
+        }
+
+        /* Card styling */
+        .post, .comment, .reply {
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            margin-bottom: 16px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* Avatar styling */
+        .avatar {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border: 2px solid #007bff;
+        }
+
+        /* Header and Text styling */
+        h1, h2, h3, h4, h5, h6 {
+            color: #333;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        p {
+            margin-bottom: 10px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Blog Posts</h1>
+        
+        <!-- Form for creating a new blog post -->
+        <h2>Add New Post</h2>
+        
+        <form method="post" action="{% url 'Blog' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn">Add Post</button>
+        </form>
+
+        <!-- Display all blog posts -->
+        <h2>All Posts</h2>
+        {% if blogs %}
+            {% for blog in blogs %}
+                <div class="post">
+                    <div>
+                        <p><strong>Title:</strong> {{ blog.title }}</p>
+                        <p><strong>Author:</strong> {{ blog.author }}</p>
+                        <p><strong>Description:</strong> {{ blog.description }}</p>
+
+                        <!-- Comment Form specific to this post -->
+                        
+                        <form method="POST" action="{% url 'Comment' blog.id %}">
+                            {% csrf_token %}
+                            {{ info.as_p }}
+                            <button type="submit" class="btn">Add Comment</button>
+                        </form>
+
+                        <!-- Display comments for this post -->
+                        <h4>Comments:</h4>
+                        {% if blog.comments.all %}
+                            {% for comment in blog.comments.all %}
+                                <div class="comment">
+                                    <strong>{{ comment.author }}</strong>: {{ comment.comment }}
+
+                                    <!-- Form for replying to this comment -->
+                                    <form method="POST" action="{% url 'Reply' comment.id %}">
+                                        {% csrf_token %}
+                                        {{ replyc.as_p }}
+                                        <button type="submit" class="btn">Add Reply</button>
+                                    </form>
+
+                                    <!-- Display replies for this comment -->
+                                    <div class="replies">
+                                        <h5>Replies:</h5>
+                                        {% if comment.replies.all %}
+                                            {% for reply in comment.replies.all %}
+                                                <div class="reply">
+                                                    <strong>{{ reply.author }}</strong>: {{ reply.reply }}
+                                                </div>
+                                            {% endfor %}
+                                        {% else %}
+                                            <p>No replies yet.</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p>No comments yet.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No blog posts available.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

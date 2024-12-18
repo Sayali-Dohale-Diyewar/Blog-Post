@@ -1,0 +1,45 @@
+<body>
+    <div class="container">
+        <h1>Blog Posts</h1>
+        
+        <!-- Form for creating a new blog post -->
+        <h2>Add New Post</h2>
+        <form method="post" action="{% url 'Blog' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn">Add Post</button>
+        </form>
+
+        <!-- Display all blog posts -->
+        <h2>All Posts</h2>
+        {% if blogs %}
+            {% for blog in blogs %}
+                <div class="post">
+                    <div>
+                        <p><strong>Title:</strong> {{ blog.title }}</p>
+                        <p><strong>Author:</strong> {{ blog.author }}</p>
+                        <p><strong>Description:</strong> {{ blog.description }}</p>
+
+                        <!-- Comment Form for this specific blog post -->
+                        <form method="post" action="{% url 'comment_blog_post' blog.id %}">
+                            {% csrf_token %}
+                            {{ info.as_p }}
+                            <button type="submit" class="btn">Add Comment</button>
+                        </form>
+
+                        <!-- Div to display comments for this specific blog post -->
+                        <div id="commentsSection">
+                            {% for comment in blog.comments.all %}
+                                <div class="comment">
+                                    <strong>{{ comment.author }}</strong>: {{ comment.comment }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No blog posts available.</p>
+        {% endif %}
+    </div>
+</body>

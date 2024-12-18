@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog</title>
+    <style>
+        /* Basic Reset */
+        body, h1, h2, h3, h4, h5, h6, p, form {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Center-align and style body */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Container for content */
+        .container {
+            max-width: 700px; /* Reduced width */
+            width: 50%;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        /* Form controls */
+        .form-control {
+            width: calc(100% - 24px);
+            padding: 10px; /* Reduced padding */
+            margin-bottom: 16px;
+            border: 1px solid #dcdcdc;
+            border-radius: 6px;
+            font-size: 14px; /* Smaller font size */
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+        <body>
+        <!-- Form for creating a new blog post -->
+        <h2>Registration Form</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ reg.as_p }}
+            <button type="submit">Submit</button>
+        </form>
+
+    </body>
+</html>
+
+
+        
+        
